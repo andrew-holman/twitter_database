@@ -1,0 +1,10 @@
+Week of October 25:
+* Team started work on project
+* Team meeting for 1 hour to assign individual tasks and setup source control
+ - Thomas's task:
+   * Create skeleton of java application
+   * Connect with MySQL server
+ - Andrew's task:
+   * Create relational scheme MySQL
+   * Load in the data from the csv
+   * Create queries for extra credit
