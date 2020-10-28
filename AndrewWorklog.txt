@@ -1,0 +1,2 @@
+Week of 10/25
+ * Implement extra credit portion of the project (4hrs)
