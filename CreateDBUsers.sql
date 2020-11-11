@@ -1,1 +1,5 @@
--- TODO doesn't need to be done for extra credit
+DROP USER IF EXISTS 'cs363';
+
+CREATE USER 'cs363' IDENTIFIED BY 'cs363';
+GRANT ALL PRIVILEGES ON group89 . * TO 'cs363';
+FLUSH PRIVILEGES;
