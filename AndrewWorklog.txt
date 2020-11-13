@@ -4,3 +4,4 @@ Week of 11/1
  * Create EnsureDataConsistency (1hr)
 Week of 11/8
  * Create trigger and create db user statements (1hr)
+ * Work on queries (2hr)
