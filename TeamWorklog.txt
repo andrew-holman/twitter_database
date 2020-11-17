@@ -19,3 +19,10 @@ Week of November 8:
   * Continue work on java app
  - Andrew's task:
   * Q3, Q9, Q18, I
+Week of November 15:
+* Team met for 1 hour to try and fix some MySQL errors.
+* Team met for 1 hour to fix queries and to check on status.
+ - Thomas's task:
+  * Complete Java application
+ - Andrew's task:
+  * Complete query optimization
