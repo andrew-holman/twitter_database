@@ -26,3 +26,4 @@ Week of November 15:
   * Complete Java application
  - Andrew's task:
   * Complete query optimization
+* Team met for 30 minutes to check on progress before final day of work

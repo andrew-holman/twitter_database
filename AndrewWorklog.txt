@@ -5,3 +5,6 @@ Week of 11/1
 Week of 11/8
  * Create trigger and create db user statements (1hr)
  * Work on queries (2hr)
+Week of 11/15
+ * Work on optimization (1hr)
+ * Work on optimization (2hr)
