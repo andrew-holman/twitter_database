@@ -361,7 +361,7 @@ public class project {
 			
 			int rowcount = inststmt.executeUpdate();
 			
-			System.out.println("User" + screenname + " has been added as a twitter user");
+			System.out.println("User " + screenname + " has been added as a twitter user");
 			inststmt.close();
 			// confirm that these are the changes you want to make
 			conn.commit();
