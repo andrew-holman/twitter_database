@@ -6,3 +6,5 @@ Week of 11/1
  * Created skeleton for java project set up (30 min) 
 Week of 11/8
  * Work on queries (2hr)
+Week of 11/15
+ * Create java application (4 hrs)
