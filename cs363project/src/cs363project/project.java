@@ -3,6 +3,10 @@ package cs363project;
 import java.sql.*;
 import java.util.Scanner;
 
+/**
+ * @author tmorvant
+ *
+ */
 public class project {
 
 	
