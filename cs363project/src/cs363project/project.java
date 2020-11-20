@@ -152,16 +152,19 @@ public class project {
 					System.out.println("Enter user's state:");
 					String state = scanner.nextLine();
 					addUser(screenname, name, followers, following, category, subcategory, state, conn);
+					System.out.println("Select next option:");
 					selection = scanner.nextLine();
 				}
 				else if (selection.equals("h")) {
 					System.out.println("Enter user's screen name to delete:");
 					String screenname = scanner.nextLine();
 					deleteUser(screenname, conn);
+					System.out.println("Select next option:");
 					selection = scanner.nextLine();
 				}
 				else {
 					System.out.println("Invalid selection, try again");
+					
 					selection = scanner.nextLine();
 				}
 			}
@@ -354,7 +357,7 @@ public class project {
 			
 			int rowcount = inststmt.executeUpdate();
 			
-			System.out.println("Number of rows updated:" + rowcount);
+			System.out.println("User" + screenname + " has been added as a twitter user");
 			inststmt.close();
 			// confirm that these are the changes you want to make
 			conn.commit();
@@ -385,7 +388,7 @@ public class project {
 			
 			int rowcount = inststmt.executeUpdate();	//executes update
 			
-			System.out.println("Number of payment rows deleted: " + rowcount);	//returns rows updated
+			System.out.println("User " + screenname + " and all relating tweets and hashtags have been deleted");	//returns rows updated
 			inststmt.close();	//closes statement
 			
 			conn.commit();	//commits updates to database
