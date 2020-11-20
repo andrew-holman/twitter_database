@@ -1,4 +1,4 @@
--- Q7 where hashtag = "GOP", state = "NC", month = 10, year = 2016, k = 5
+-- Q7 where hashtag = "GOP", state = "North Carolina", month = 2, year = 2016, k = 5
 select count(twt.tid) as tweets, twitter_user.screen_name, twitter_user.category
 from twitter_user
 join tweet as twt on twt.posting_user = twitter_user.screen_name

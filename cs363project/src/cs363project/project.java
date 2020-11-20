@@ -12,18 +12,16 @@ public class project {
 		String userName = "";
 		String password = "";
 
-//		String result[] = loginDialog();
-		userName = "cs363";
+
+		userName = "cs363";		//connection to database on these credentials
 		password = "363F2020";
 
 		Connection conn;
 		Statement stmt;
-//		if (result[0]==null || result[1]==null) {
-//			System.out.println("Terminating: No username nor password is given");
-//			return;
-//		}
+
 		System.out.println("Type letter to select option and press enter");
 		System.out.println("");
+		//try/catch loop to open and run connection
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			conn = DriverManager.getConnection(dbServer, userName, password);
@@ -169,28 +167,47 @@ public class project {
 			}
 
 			System.out.println("Exited");
-			stmt.close();
-			conn.close();
+			stmt.close();	//closes statement
+			conn.close();	//closes connection
 			scanner.close();
 		} catch (Exception e) {
 			System.out.println("Program terminates due to errors");
-			e.printStackTrace();
+			e.printStackTrace();	//throws sql exception if something does not go as planned
 		}
 	}
 	
+	/**
+	 * Finds k most used hashtags in given states and how many states they were used in
+	 * 
+	 * @param k				The number of results to return
+	 * @param year			The year from which to find results
+	 * @param stmt			Statement to pass into runQuery 
+	 * @throws SQLException
+	 */
 	private static void findMostUsedHashtags(int k, int year, Statement stmt) throws SQLException {
-		String query = "SELECT tweet_tag.tag_name, group_concat(DISTINCT tUser.state ORDER BY tUser.state) as States, COUNT(DISTINCT tUser.state) AS num_states\r\n"
+		String query = "SELECT COUNT(DISTINCT tUser.state) AS statenum, group_concat(DISTINCT tUser.state ORDER BY tUser.state) as States, tweet_tag.tag_name as name "
 				+ "FROM tweet_tag "
 				+ "JOIN tweet ON tweet.tid = tweet_tag.tid "
 				+ "JOIN twitter_user AS tUser ON tUser.screen_name = tweet.posting_user "
-				+ "WHERE tUser.state != \"\" and tUser.state != \"na\" and year(tweet.posted) = '" + year +"' "
+				+ "WHERE tUser.state != \"\" and tUser.state != \"na\" and year(tweet.posted) = '" + year + "' "
 				+ "GROUP BY tweet_tag.tag_name "
-				+ "ORDER BY num_states DESC "
+				+ "ORDER BY statenum DESC "
 				+ "LIMIT " + k + ";";
 		runQuery(stmt, query);
 		
 	}
 	
+	/**
+	 * Find k users who used a given hashtag in a given state in a given year from a given state
+	 * 
+	 * @param hashtag		Hashtag to search
+	 * @param state			User's state
+	 * @param k				Number of results to return
+	 * @param month			Month tweeted
+	 * @param year			Year tweeted
+	 * @param stmt			Statement to pass into runQuery
+	 * @throws SQLException
+	 */
 	private static void findUserByHashtag(String hashtag, String state, int k, int month, int year, Statement stmt) throws SQLException {
 		String query = "select count(twt.tid) as tweets, twitter_user.screen_name, twitter_user.category "
 				+ "from twitter_user "
@@ -206,6 +223,14 @@ public class project {
 		runQuery(stmt, query);
 	}
 	
+	/**
+	 * Returns k most followed users from given category
+	 * 
+	 * @param category		Category from which to find users
+	 * @param k				Number of results
+	 * @param stmt			Statement to pass into runQuery
+	 * @throws SQLException
+	 */
 	private static void findMostFollowed(String category, int k, Statement stmt) throws SQLException {
 		String query = "SELECT twitter_user.screen_name, twitter_user.subcategory, twitter_user.numFollowers "
 				+ "FROM twitter_user "
@@ -215,6 +240,15 @@ public class project {
 		runQuery(stmt, query);
 	}
 	
+	/**
+	 * Find k most retweeted tweets during given month of given year
+	 * 
+	 * @param month			Month from which to find tweets
+	 * @param year			Year from which to find tweets
+	 * @param k				Number of results
+	 * @param stmt			Statement to pass into runQuery
+	 * @throws SQLException
+	 */
 	private static void findMostRetweeted(int month, int year, int k, Statement stmt) throws SQLException {
 		String query = "select twitter_user.screen_name, twitter_user.category, twt.textbody, twt.retweet_count, url.address "
 				+ "from twitter_user "
@@ -227,19 +261,39 @@ public class project {
 		runQuery(stmt, query);
 	}
 	
+	/**
+	 * Finds k most mentioned users from the mentionees given subcategory from a given month in a given year
+	 * 
+	 * @param subcategory	Mentionee's subcategory
+	 * @param month			Month from which to find tweets
+	 * @param year			Year from which to find tweets
+	 * @param k				Number of results
+	 * @param stmt			Statement to pass into runQuery
+	 * @throws SQLException
+	 */
 	private static void findMostMentioned(String subcategory, int month, int year, int k, Statement stmt) throws SQLException {
-		String query = "SELECT mentioned.screen_name, mentioned.state, COUNT(men.tid), group_concat(DISTINCT mentionee.screen_name ORDER BY mentionee.screen_name) as Mentionees "
+		String query = "SELECT mentioned.screen_name as mentionedUser, mentioned.state as mentionedUserState, group_concat(DISTINCT mentionee.screen_name ORDER BY mentionee.screen_name) as postingUsers "
 				+ "FROM twitter_user mentioned "
 				+ "JOIN mention AS men ON men.screen_name = mentioned.screen_name "
 				+ "JOIN tweet ON tweet.tid = men.tid AND month(tweet.posted) = " + month + " AND year(tweet.posted) = " + year + " "
 				+ "JOIN twitter_user AS mentionee ON mentionee.screen_name = tweet.posting_user "
-				+ "WHERE mentioned.subcategory = '" + subcategory + "' "
+				+ "WHERE mentionee.subcategory = '" + subcategory + "' "
 				+ "GROUP BY mentioned.screen_name "
 				+ "ORDER BY COUNT(men.tid) DESC "
 				+ "LIMIT " + k + ";";
 		runQuery(stmt, query);
 	}
 	
+	/**
+	 * Finds k most used hashtags from given subcategory of users from a given range of months from a given year
+	 * 
+	 * @param subcategory	User's subcategory to find tweets/hashtags
+	 * @param months		Range of months to find tweets
+	 * @param year			Year from which to find tweets
+	 * @param k				Number of results
+	 * @param stmt			Statement to pass in runQuery
+	 * @throws SQLException
+	 */
 	private static void findMostUsedHashtags(String subcategory, int[] months, int year, int k, Statement stmt) throws SQLException {
 		String query = "select hashtag.tag_name, count(distinct twt.tid) as num_uses "
 				+ "from tweet_tag as hashtag "
@@ -254,6 +308,18 @@ public class project {
 		runQuery(stmt, query);
 	}
 	
+	/**
+	 * Adds new twitter_user to twitter_user table
+	 * 
+	 * @param screenname	Screenname of user to add
+	 * @param name			Name of user to add
+	 * @param followers		Number of followers of user to add
+	 * @param following		Number of users that are being followed by user to add
+	 * @param category		Category of user to add
+	 * @param subcategory	Subcategory of user to add
+	 * @param state			State of user to add
+	 * @param conn			Connection to run add statement on
+	 */
 	private static void addUser(String screenname, String name, int followers, int following, String category, String subcategory, String state, Connection conn) {
 		try {
 			
@@ -299,24 +365,30 @@ public class project {
 		}
 	}
 	
+	/**
+	 * Deletes user from twitter_user table, their tweets from tweet table, and their hashtags from tag table
+	 * 
+	 * @param screenname	Screenname of user to delete
+	 * @param conn			Connection to run delete statement on
+	 */
 	private static void deleteUser(String screenname, Connection conn) {
 		try {
-			conn.setAutoCommit(false);
+			conn.setAutoCommit(false);	//won't immediately delete until commit()
 //			Statement stmt = conn.createStatement();
 			
 			
 			//deletes from payment
 			PreparedStatement inststmt = conn.prepareStatement(
-	                " delete from twitter_user where screen_name = ?");
+	                " delete from twitter_user where screen_name = ?");	//delete statement to be executed
 			
-			inststmt.setString(1, screenname);
+			inststmt.setString(1, screenname);	//sets screenname at the ?
 			
-			int rowcount = inststmt.executeUpdate();
+			int rowcount = inststmt.executeUpdate();	//executes update
 			
-			System.out.println("Number of payment rows deleted: " + rowcount);
-			inststmt.close();
+			System.out.println("Number of payment rows deleted: " + rowcount);	//returns rows updated
+			inststmt.close();	//closes statement
 			
-			conn.commit();
+			conn.commit();	//commits updates to database
 		}
 		catch (SQLException e) {
 		}
@@ -325,11 +397,13 @@ public class project {
 	}
 	
 	/**
+	 * 
+	 * Method borrowed from JDBCTransaction tester, written by ISU CS dept. Will run query and print results with modification to print to console
+	 * 
 	 * @param stmt 				Stmt to run via connection
 	 * @param sqlQuery			String on which to run sql query
 	 * @throws SQLException		Any exception thrown by database
 	 * 
-	 * Method borrowed from JDBCTransaction tester. Will run query and print results with modification
 	 */
 	private static void runQuery(Statement stmt, String sqlQuery) throws SQLException {
 		ResultSet rs;
